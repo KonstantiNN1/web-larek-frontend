@@ -58,7 +58,7 @@ private **popupName**: string – название попапа
 
 **toggleButton** – повторяет функционал с добавлением параметра
 
-**Adressinput: string** – поле, куда необходимо записать адрес в виде строки
+**adressInput: string** – поле, куда необходимо записать адрес в виде строки
 
 **paymentNow: HTMLElementButton** - кнопка, на которой написано "Онлайн"
 
