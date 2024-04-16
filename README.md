@@ -17,7 +17,7 @@
 
 ### базовый class Popup:
 
-private **popupName**: string – название попапа
+**popupName**: string – название попапа
 
 **buttonClick: void** – метод, срабатывающий при нажатии на кнопку 
 
@@ -105,9 +105,9 @@ private **popupName**: string – название попапа
 
 **baseApi: string** – базовый API, от которого идем
 
-**getCells: object<string>** – GET метод, который добавляет все ячейки на главную страницу 
+**getCells: Product[]** – GET метод, который добавляет все продукты в ячейки на главную страницу
 
-**postOrder: object<number: object>** – POST метод, который будет отправлять данные на сервер после совершения заказа
+**postOrder: InOrder[]** – POST метод, который будет отправлять данные на сервер после совершения заказа
 
 ## Слой данных (Model)
 
@@ -118,7 +118,7 @@ private **popupName**: string – название попапа
 
 **deleteProduct: object<number: string>** – метод, который удаляет продукт из корзины и возвращает новый объект
 
-**getProducts: object<number: string>** – метод, который возвращает актуальный объект с продуктами (используется для отображения на главной странице и для popupCard)
+**getProducts: object<number: string>** – метод, который возвращает актуальный объект с продуктами (используется для popupCard и API)
 
 ### class Order:
 
@@ -147,9 +147,9 @@ private **popupName**: string – название попапа
 
 **interface Product** – описывает каждый продукт (не путать с описанием ячейки из **класса Cell**) {
 
-  productId: string; – идентификатор продукта в БД
+  _private_ productId: string; – идентификатор продукта в БД
   
-  name: string; – название продукта
+  private name: string; – название продукта
   
   description: string; – то описание, которое видно на сайте
   
