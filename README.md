@@ -104,6 +104,7 @@
 ### class Api: 
 
 **baseApi: string** – базовый API, от которого идем
+**options: object<string>** – добавление типовых данных
 
 **getCells: Product[]** – GET метод, который добавляет все продукты в ячейки на главную страницу
 
@@ -149,7 +150,7 @@
 
   _private_ productId: string; – идентификатор продукта в БД
   
-  private name: string; – название продукта
+  name: string; – название продукта
   
   description: string; – то описание, которое видно на сайте
   
