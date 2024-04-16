@@ -45,6 +45,8 @@ private **popupName**: string – название попапа
 
 **products**: <number: string> – список продуктов, которые мы уже добавили в корзину 
 
+**wholePrice**: string – общая цена за все продукты, записанная в формате ${price} + string
+
 **deleteProduct**: void – удаление продукта из корзины 
 
 
@@ -94,7 +96,7 @@ private **popupName**: string – название попапа
 
 **popupImage: string** – изображение, добавленное в попап
 
-**balance: string** – остаток средств, записанный в формате ${number} + string
+**wholePrice**: string – общая цена за все продукты, записанная в формате ${price} + string
 
 
 ## Слой представления (Presenter)
