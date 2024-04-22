@@ -131,6 +131,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 } 
 
 ### class OpenedProduct extends Product – класс, который описывает продукт, открытый в модальном окне
+
 {
     description: HTMLElement
 
@@ -138,6 +139,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 ### class PAge extends Component<IPage> – класс, который описывает стартовую страницу
+
 {
     catalog: HTMLElement;
 
@@ -149,6 +151,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 ### class Cart extends Component<ICart>  – класс, который описывает корзину (открытую в модальном окне) 
+
 {
     list = HTMLElement
 
@@ -164,6 +167,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 ### class ProductInCart extends Component<IProductInCart> – класс, который описывает каждый продукт в корзине
+
 {
     index: HTMLElement
 
@@ -183,6 +187,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 ### class Order extends Component<IOrder> – класс, который описывает модальное окно заказа
+
 {
     online: HTMLButtonElement
 
@@ -196,6 +201,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 ### class User extends Component<IUser> – класс, который описывает модальное окно ввода данных о клиенте
+
 {
     email: HTMLInputElement;
    
@@ -205,6 +211,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 ### class Success extends Component<ISuccess> 
+
 {
 
     close: HTMLButtonElement;
@@ -215,27 +222,22 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     description: HTMLElement;
 
-
 }
-
-
-
-
 
 
 ## Слой данных (Model)
 
 ### class AppData extends Model<IAppData> – класс для взаимодействия представления с данными 
+
 { 
    _полностью повторяет интерфейс IAppDara_
 }
 
 
-
-
 ## Сервисный класс 
 
 ### class WebLarekApi 
+
 {
     getProduct() - запрос для чтения данных 1-го продукта
     
@@ -245,15 +247,11 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 
-
-
-
 ## Типы данных 
 
 **type CategoryOfProduct** =  'софт-скил' | 'хард-скил' | 'другое' | 'дополнительное' | 'кнопка'  – всевозможные типы, которые упомянуты в макете 
 
 **type FormErrors = { [key: string]: string | undefined }** – тип для вызова ошибки во время валидации
-
 
 **interface IProduct** { – все, что встречается у продукта во время отображения на экране или его выбора
   id: string;
@@ -370,8 +368,6 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 }
 
 
-
-
 ## Presenter 
 
 'product: select' – вызывается при выборе продукта 
@@ -399,9 +395,3 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 'order: ordered' – вызывает последний попап "Заказ оформлен"
 
 'modal: close' – вызывается при нажатии на крестик, escape и overlay во время заказа
-
-
-
-
-
-
