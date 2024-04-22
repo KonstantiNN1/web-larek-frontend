@@ -1,3 +1,8 @@
+export type ApiListResponse<Type> = { 
+    total: number, 
+    items: Type[] 
+}; 
+
 type CategoryOfProduct =  'софт-скил' | 'хард-скил' | 'другое' | 'дополнительное' | 'кнопка'; 
 
 type FormErrors = { [key: string]: string | undefined };
