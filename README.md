@@ -230,7 +230,34 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 ### class AppData extends Model<IAppData> – класс для взаимодействия представления с данными 
 
 { 
-   _полностью повторяет интерфейс IAppDara_
+    cart: HTMLElement[];
+    
+    inCart: HTMLElement[];
+    
+    order: Record<HTMLElement>;
+    
+    addToCart(product: HTMLElement): void
+    
+    deleteFromCart(product: HTMLElement): void
+    
+    clearCart(): void
+
+    clearOrder(): void;
+
+    setProducts(): void
+
+    getTotalPrice(): void
+
+    getTotalNumber(): void
+
+    validateOrder(): boolean;
+
+    validateUser(): boolean;
+
+    resetChosen(): boolean;
+
+    errors: FormErrors;
+
 }
 
 
