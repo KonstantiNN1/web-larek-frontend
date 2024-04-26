@@ -11,7 +11,7 @@
 - src/pages/index.html — HTML-файл главной страницы
 - src/types/index.ts — файл с типами
 - src/index.ts — точка входа приложения
-- src/styles/styles.scss — корневой файл стилей
+- src/scss/mixins/styles.scss — корневой файл стилей
 - src/utils/constants.ts — файл с константами
 - src/utils/utils.ts — файл с утилитами
 
@@ -43,9 +43,9 @@ npm run build
 
 _data_ – данные, которые передаются в конструкторе 
 
-_event_ – объект событий, который также передается в конструктуоре 
+_events_ – объект событий, который также передается в конструктуоре 
 
-_emitEvents(event)_ – метод, который эмитирует события
+_emitEvents(events)_ – метод, который эмитирует события
 
 
 ### abstract class Component<T>:
@@ -54,20 +54,20 @@ _container_: HTMLElement – какой-либо элемент, который 
 
 _toggleClass(element: HTMLElement, class: string): void_ – метод, который меняет класс у элемента
 
-_setValue(element: HTMLElement, value: string)_ – метод, который устанавливает текст
+_setTextContent(element: HTMLElement, value: string)_ – метод, который устанавливает текст
 
 _setActivation(element: HTMLElement, value: boolean)_ – метод, который устанавливает состояние 
 
-_setImage(elemen: HTMLElement, src: string, alt: string)_ – метод, который устанавливает фото и альтернативное описание 
+_setImage(elemen: HTMLImageElement, src: string, alt: string)_ – метод, который устанавливает фото и альтернативное описание 
 
 _toggleVisibility(element: HTMLElement)_ – метод, который меняет видимость элемента
 
 _getElement(element: HTMLElement)_ – метод, который возвращает элемент
 
 
-### class Api:
+### class api:
 
-_baseApi: string_ – базовый API, от которого идем
+_baseUrl: string_ – базовый API, от которого идем
 
 _options: object<string>_ – добавление типовых данных
 
@@ -77,7 +77,7 @@ _get(uri: string): Product[]_ – GET метод, который принима�
 
 _post(uri: string, data: object, method: ApiPostMethods = 'POST): InOrder[]_ – POST метод, который будет отправлять данные на сервер
 
-### class EventEmitter: 
+### class events: 
 
 _events: Map<EventName, Set<Subscriber>>_ – события
 
@@ -99,17 +99,19 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 ## Слой отображения (View) 
 
 ### class Product extends Component<IProduct>  – класс, который описывает продукт и то, какие действия с ним можно сделать
-{
 
-    name: HTMLElement – название ячейки
+
+    title: HTMLElement – название ячейки
 
     category: HTMLElement – категория ячейки
 
     image: HTMLImageElement – ссылка на изображение/прорисовка изображения
 
-    price: HTMLElement – цена в формате ${number} + string
+    price: HTMLElement – цена в формате $number + string
 
     button: HTMLButtonElement – вшитая в карточку кнопка
+    
+    ?selected: boolean
 
     ?actions: Actions
 
@@ -117,9 +119,9 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     set id(value: string): void
    
-    get name(): string
+    get title(): string
 
-    set name(value: string): void
+    set title(value: string): void
 
     set image(value: string): void
 
@@ -128,50 +130,55 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
     set price(calue: numver | null)
 
     set category(value: CategoryOfProduct)
-} 
+ 
 
 ### class OpenedProduct extends Product – класс, который описывает продукт, открытый в модальном окне
 
-{
+
     description: HTMLElement
 
     set description(value: string)
-}
 
-### class PAge extends Component<IPage> – класс, который описывает стартовую страницу
 
-{
-    catalog: HTMLElement;
+### class Page extends Component<IPage> – класс, который описывает стартовую страницу
 
-    incart: HTMLElement;
+
+    gallery: HTMLElement;
+
+    counter: HTMLElement;
 
     cart: HTMLElement;
 
     layout: HTMLElement;
-}
+
+    set gallery();
+
+    set counter();
+
+
 
 ### class Cart extends Component<ICart>  – класс, который описывает корзину (открытую в модальном окне) 
 
-{
-    list = HTMLElement
 
-    price = HTMLElement
+    list: HTMLElement
 
-    button = HTMLButtonElement
+    price: HTMLElement
 
-    ?actions: Actions
+    button: HTMLButtonElement
 
-    set price(price: number)
+    ?events: IEvents
 
-    set list(products: HTMLElements[]) 
-}
+    set price(newPrice: number)
+
+    set list(products: HTMLElement[]) 
+
 
 ### class ProductInCart extends Component<IProductInCart> – класс, который описывает каждый продукт в корзине
 
-{
+
     index: HTMLElement
 
-    name: HTMLElement
+    title: HTMLElement
 
     price: HTMLElement
 
@@ -181,38 +188,38 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     set index(value: number)
 
-    set name(value: string)
+    set title(value: string)
 
     set price(value: number | null)
-}
 
-### class Order extends Component<IOrder> – класс, который описывает модальное окно заказа
 
-{
+### class Order extends Component<IDelivery> – класс, который описывает модальное окно заказа
+
+
     online: HTMLButtonElement
 
     offline: HTMLButtonElement
 
-    adress: HTMLInputElement
+    address: HTMLInputElement
 
     actions: Actions
 
     toggleIsChosen(button: HTMLButtonElement): void
-}
+
 
 ### class User extends Component<IUser> – класс, который описывает модальное окно ввода данных о клиенте
 
-{
+
     email: HTMLInputElement;
    
     phone: HTMLInputElement;
    
     actions: Actions
-}
+
 
 ### class Success extends Component<ISuccess> 
 
-{
+
 
     close: HTMLButtonElement;
 
@@ -222,14 +229,14 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     description: HTMLElement;
 
-}
+
 
 
 ## Слой данных (Model)
 
 ### class AppData extends Model<IAppData> – класс для взаимодействия представления с данными 
 
-{ 
+ 
     cart: HTMLElement[];
     
     inCart: HTMLElement[];
@@ -250,7 +257,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     getTotalNumber(): void
 
-    validateOrder(): boolean;
+    validateDelivery(): boolean;
 
     validateUser(): boolean;
 
@@ -258,32 +265,33 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     errors: FormErrors;
 
-}
+
 
 
 ## Сервисный класс 
 
-### class WebLarekApi 
+### class WebLarekApi – предоставляет методы для взаимодействия с API, позволяя получать информацию о продуктах и оформлять заказы. Класс наследует от базового класса Api и реализует интерфейс IWebLarekApi
 
-{
-    getProduct() - запрос для чтения данных 1-го продукта
-    
-    getAllProducts() - запрос для чтения данных по всем продуктам
-    
-    postOrder() - запрос после успешного оформления заказа
-}
+    constructor(cdn: string, baseUrl: string, options?: RequestInit)
+
+    getAllProducts(): Promise<IProduct[]> - Возвращает список продуктов. Добавляет URL изображения к каждому продукту.
+
+    getProduct(id: string): Promise<IProduct> - Возвращает информацию о продукте по его идентификатору. Добавляет URL изображения к продукту.
+
+    postOrder(order: IOrder): Promise<IOrderResult> - Отправляет заказ. Возвращает результат оформления заказа.
+
 
 
 ## Типы данных 
 
 **type CategoryOfProduct** =  'софт-скил' | 'хард-скил' | 'другое' | 'дополнительное' | 'кнопка'  – всевозможные типы, которые упомянуты в макете 
 
-**type FormErrors = { [key: string]: string | undefined }** – тип для вызова ошибки во время валидации
+**type FormErrors =  [key: string]: string | undefined ** – тип для вызова ошибки во время валидации
 
-**interface IProduct** { – все, что встречается у продукта во время отображения на экране или его выбора
+**interface IProduct**  – все, что встречается у продукта во время отображения на экране или его выбора
   id: string;
 
-  name: string;
+  title: string;
 
   category: string;
   
@@ -295,23 +303,25 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
   
   selected: boolean;
 
-}
 
-**interface IProductInCart extends IProduct** { – то, что есть у продукта в корзине
+
+**interface IProductInCart extends IProduct**  – то, что есть у продукта в корзине
    
     index: number;
-}
 
-**interface ICart** { – то, как выглядит сама корзина
+
+**interface ICart**  – то, как выглядит сама корзина
     
     list: Object[];
     
     price: number;
-}
 
-**interface IOrderForm** { – вся форма для заказа
 
-  payment: 'Онлайн' | 'При получении';
+**interface IOrderForm**  – вся форма для заказа
+
+  items: object[]
+
+  payment: 'Онлайн' | 'При получении' | undefined;
   
   address: string;
   
@@ -319,32 +329,32 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
   
   phone: string;
 
-}
 
-**interface IOrder** { – первая часть формы, которые появляется в модальном окне при нажатии кнопки "Оформить"
+
+**interface IDelivery**  – первая часть формы, которые появляется в модальном окне при нажатии кнопки "Оформить"
     
-    adress: string;
+    address: string;
     
     payment: 'Онлайн' | 'При получении';
-}
 
-**interface IUser** { – вторая часть формы, после деталей заказа
+
+**interface IUser**  – вторая часть формы, после деталей заказа
    
     email: string;
    
     phone: string;
-}
 
-**interface Actions** { – любое действие, которое происходит при клике  
+
+**interface Actions**  – любое действие, которое происходит при клике  
   
     onClick: (event: MouseEvent) => void;
-}
 
-**interface IAppData** { – то, какие данные и методы необходимы для работы приложения
+
+**interface IAppData**  – то, какие данные и методы необходимы для работы приложения
 
     cart: Product[];
     
-    inCart: Product[];
+    gallery: Product[];
     
     order: IOrder;
     
@@ -370,21 +380,21 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     errors: FormErrors;
 
-}
 
-**interface IPage** { – то, как выглядит приложение при загрузке
 
-    catalog: HTMLElement[];
+**interface IPage**  – то, как выглядит приложение при загрузке
+
+    gallery: HTMLElement[];
 
     cart: HTMLElement[];
 
-    incart: number;
+    counter: number;
 
-}
 
-**interface ISuccess** { – то, как выглядит последнее окно после успешного заказа
+
+**interface ISuccess**  – то, как выглядит последнее окно после успешного заказа
     
-    close: HTMLButtonElement;
+    closeButton: HTMLButtonElement;
 
     image: string;
 
@@ -392,7 +402,7 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
     totalSumm: number;
 
-}
+
 
 
 ## Presenter 
@@ -422,3 +432,5 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 'order: ordered' – вызывает последний попап "Заказ оформлен"
 
 'modal: close' – вызывается при нажатии на крестик, escape и overlay во время заказа
+
+'gallery: open'

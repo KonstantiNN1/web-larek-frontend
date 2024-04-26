@@ -1,6 +1,6 @@
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
-export class Api {
+export class Api<T> {
     readonly baseUrl: string;
     protected options: RequestInit;
 

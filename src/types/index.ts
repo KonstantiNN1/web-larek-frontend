@@ -1,71 +1,91 @@
+import { Product } from "../components/Product";
+
 export type ApiListResponse<Type> = { 
-    total: number, 
+    // total: number, 
     items: Type[] 
 }; 
 
-type CategoryOfProduct =  'софт-скил' | 'хард-скил' | 'другое' | 'дополнительное' | 'кнопка'; 
+// export type ApiResponse<Type> = { 
+//     items: Type[] 
+// }; 
 
-type FormErrors = { [key: string]: string | undefined };
+export type CategoryOfProduct =  'софт-скил' | 'хард-скил' | 'другое' | 'дополнительное' | 'кнопка'; 
 
-interface IProduct {
+export type FormErrors = { [key: string]: string | undefined };
+
+export interface IProduct {
   id: string;
-  name: string;
+  title: string;
   category: string;
   description: string;
   image: string;
   price: number | null;
-  selected: boolean;
+  selected?: boolean;
 }
 
-interface IProductInCart extends IProduct {
+export interface IProductInCart extends IProduct {
     index: number;
 }
 
-interface ICart {
+export interface ICart {
     list: Object[];
     price: number;
 }
 
-interface IOrder {
-    adress: string;
-    payment: 'Онлайн' | 'При получении';
+export interface IDelivery {
+    address: string;
+    payment: 'Онлайн' | 'При получении' | undefined;
 }
 
-interface IUser {
+export interface IUser {
     email: string;
     phone: string;
 }
 
-interface Actions {
+export interface IOrder extends IDelivery, IUser {
+    total: number,
+    items: object[]
+} 
+
+export interface Actions {
     onClick: (event: MouseEvent) => void;
 }
 
-interface IAppData {
+export interface IAppData {
     cart: IProduct[];
-    inCart: IProduct[];
+    gallery: IProduct[];
     order: IOrder;
     addToCart(product: IProduct): void
     deleteFromCart(product: IProduct): void
     clearCart(): void
     clearOrder(): void;
     setProducts(): void
-    getTotalPrice(): void
-    getTotalNumber(): void
-    validateOrder(): boolean;
+    getTotalPrice(): number
+    getTotalNumber(): number
+    validateDelivery(): boolean;
     validateUser(): boolean;
     resetChosen(): boolean;
     errors: FormErrors;
 }
 
-interface IPage {
-    catalog: HTMLElement[];
+export interface IPage {
+    gallery: HTMLElement[];
     cart: HTMLElement[];
-    incart: number;
+    counter: number;
 }
 
-interface ISuccess {
-    close: HTMLButtonElement;
+export interface ISuccess {
+    closeButton: HTMLButtonElement;
     image: string;
     description: string;
     totalSumm: number;
 }
+
+export interface IFormState {
+    valid: boolean;
+    errors: string[];
+};
+
+export interface IModal {
+	content: HTMLElement;
+};
