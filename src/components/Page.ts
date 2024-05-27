@@ -1,32 +1,45 @@
-import { IPage } from "../types";
-import { IEvents } from "./base/events";
-import { Component } from "./base/Component";
+import { Component } from './base/Component';
+import { IProduct } from '../types/types';
+import { ProductComponent } from './ProductComponent';
+import { EventEmitter } from './base/events';
 
-export class Page extends Component<IPage>{
-    protected gallery: HTMLElement;
-    protected counter: HTMLElement;
-    protected cart: HTMLElement;
-    protected layout: HTMLElement;
+export class Page extends Component<null> {
+    private products: IProduct[];
+    private eventEmitter: EventEmitter;
 
-    constructor(container: HTMLElement, protected event: IEvents) {
+    constructor(containerId: string, eventEmitter: EventEmitter) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            throw new Error(`Элемент с id ${containerId} не найден.`);
+        }
         super(container);
-        this.cart = container.querySelector(`.header__basket`);
-        this.counter = container.querySelector(`.header__basket-counter`);
-        this.gallery = container.querySelector(`.gallery`);
-        this.layout = container.querySelector(`.page__wrapper`);
+        this.products = [];
+        this.eventEmitter = eventEmitter;
+    }
 
-        if (this.cart) {
-            this.cart.addEventListener('click', () => this.event.emit('cart:open'));
-          };
-    };
+    setProducts(products: IProduct[]) {
+        this.products = products;
+        this.render(null);
+    }
 
-    setСounter(value: number) {
-        this.setTextContent(this.counter, String(value));
-    };
+    render(_: null) {
+        super.render(null);
 
-    setGallery(products: HTMLElement[]) {
-        this.gallery.replaceChildren(...products);
-    };
+        const fragment = document.createDocumentFragment();
 
-    //блокировка прокрутки, если надо
-};
+        this.products.forEach(product => {
+            const productComponent = new ProductComponent(document.createElement('div'));
+            productComponent.render(product);
+            productComponent.on('product:clicked', (product: IProduct) => {
+                this.eventEmitter.emit('product:clicked', product);
+            });
+            fragment.appendChild(productComponent.getElement());
+        });
+
+        this.container.appendChild(fragment);
+    }
+
+    on(eventName: string, listener: (...args: any[]) => void) {
+        this.eventEmitter.on(eventName, listener);
+    }
+}

@@ -1,44 +1,35 @@
-import { API_URL} from "../utils/constants";
-import { Api } from "./base/api";
-import { ApiListResponse } from "../types";
-import { IProduct } from "../types";
-import { IOrder } from "../types";
+import { Api } from './base/api';
+import { IWebLarekApi, IProduct, IOrder, IOrderResult } from '..//types/types';
+import { API_URL, CDN_URL } from '../utils/constants'
 
-interface IWebLarekApi {
-    getProduct(id: string): Promise<IProduct>;
-    getAllProducts(): Promise<IProduct[]>;
-    postOrder(order: IOrder): Promise<IOrderAnswer>
-}
+export class WebLarekApi extends Api<IWebLarekApi> {
+    private cdn: string;
 
-interface IOrderAnswer {
-    id: string;
-    total: number
-}
+    constructor(options?: RequestInit) {
+        super(API_URL, options);
+        this.cdn = CDN_URL;
+    }
 
-export class WebLarekApi extends Api<IWebLarekApi>{
-    cdn: string;
-
-    constructor(cdn: string, baseUrl: string, options?: RequestInit) {
-        super(baseUrl, options);
-		this.cdn = cdn;
-    };
-
-    getProduct(id: string): Promise<IProduct> {
-        return this.get(`/product/${id}`).then((item: IProduct) => ({
-            ...item,
-            image: this.cdn + item.image,
-        }))
-    };
+    private addimage(product: IProduct): IProduct {
+        product.image = `${this.cdn}/${product.image}`;
+        return product;
+    }
 
     getAllProducts(): Promise<IProduct[]> {
-        return this.get('/product/').then((data: ApiListResponse<IProduct>) =>
-			data.items.map((item) => ({
-				...item,
-				image: this.cdn + item.image,
-			})));
-    };
+        return this.get('/product').then((response: any) => {
+            const products = response.items as IProduct[];
+            return products.map(this.addimage.bind(this));
+        });
+    }
 
-    postOrder(order: IOrder): Promise<IOrderAnswer> {
-        return this.post('/order', order).then((data: IOrderAnswer) => data);
-    };
-};
+    getProduct(id: string): Promise<IProduct> {
+        return this.get(`/product/${id}`).then((response: any) => {
+            const product = response as IProduct;
+            return this.addimage(product);
+        });
+    }
+
+    postOrder(order: IOrder): Promise<IOrderResult> {
+        return this.post('/order', order).then((response: any) => response as IOrderResult);
+    }
+}

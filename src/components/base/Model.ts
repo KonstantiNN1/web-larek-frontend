@@ -1,12 +1,19 @@
-import { IEvents } from "./events";
+import { EventEmitter } from './events';
 
 export abstract class Model<T> {
-    constructor(data: Partial<T>, protected events: IEvents) {
-        // проверить работоспособность с data
-        Object.assign(this, data);
-    };
-        // проверить с payload?
-    emitEvents(event: string, payload?: object) {
-		this.events.emit(event, payload ?? {});
-    };
-};
+    protected data: T;
+    protected events: EventEmitter;
+
+    constructor(data: T) {
+        this.data = data;
+        this.events = new EventEmitter();
+    }
+
+    protected emitEvents<K extends keyof T>(eventName: string, eventData: T) {
+        this.events.emit(eventName, { ...this.data, ...eventData });
+    }
+
+    on<K extends keyof T>(event: string, callback: (data: T) => void) {
+        this.events.on(event, callback as (data: unknown) => void);
+    }
+}

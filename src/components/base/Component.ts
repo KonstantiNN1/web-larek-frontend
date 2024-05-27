@@ -1,40 +1,32 @@
-export abstract class Component<T> {
-    constructor(protected container: HTMLElement) {}
-    
-    toggleClass(element: HTMLElement, nameClass: string): void {
-        element.classList.toggle(nameClass);
+export class Component<T> {
+    protected container: HTMLElement;
+    protected data: T | null = null;
+
+    constructor(container: HTMLElement) {
+        this.container = container;
     }
 
-    setTextContent(element: HTMLElement, value: string): void {
-        element.textContent = String(value);
+    render(data: T, ...args: any[]) {
+        this.data = data;
+        this.container.innerHTML = ''; // Очистка контейнера перед рендерингом
     }
 
-    setActivation(element: HTMLElement, value: boolean): void {
-        if (value === true) {
-            element.setAttribute('disabled', '');
-        } else {
-            element.removeAttribute('disabled');
-        }
+    toggleVisibility() {
+        this.container.classList.toggle('hidden');
     }
 
-    setImage(element: HTMLImageElement, src: string, alt: string): void {
-        element.src = src;
-        if (alt) {
-            element.alt = alt;
-        }
+    open() {
+        this.container.classList.remove('hidden');
     }
 
-    toggleVisibility(element: HTMLElement): void {
-        if (element.style.visibility === 'display') {
-            element.style.removeProperty('display');
-        } else {
-            element.style['visibility'] = 'display';
-        }
+    close() {
+        this.container.classList.add('hidden');
     }
 
-    // проверить на data
-    getElement(element: HTMLElement): HTMLElement {
-        Object.assign(this as object, element);
-        return this.container;
+    protected emit(eventName: string, data?: any): void {
+        const event = new CustomEvent(eventName, {
+            detail: data
+        });
+        this.container.dispatchEvent(event);
     }
 }
