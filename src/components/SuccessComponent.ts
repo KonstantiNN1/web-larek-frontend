@@ -34,14 +34,13 @@ export class SuccessComponent extends Component<null> {
 
         const modalContainer = document.createElement('div');
         modalContainer.className = 'modal__container';
-        modalContainer.style.position = 'relative'; // Установить относительное позиционирование для контейнера
 
         const modalCloseButton = document.createElement('button');
         modalCloseButton.className = 'modal__close';
         modalCloseButton.setAttribute('aria-label', 'закрыть');
-        modalCloseButton.style.position = 'absolute'; // Абсолютное позиционирование кнопки
-        modalCloseButton.style.top = '10px'; // Позиция сверху
-        modalCloseButton.style.right = '10px'; // Позиция справа
+        modalCloseButton.style.position = 'absolute'; 
+        modalCloseButton.style.top = '10px'; 
+        modalCloseButton.style.right = '10px'; 
         modalCloseButton.addEventListener('click', () => {
             this.eventEmitter.emit('cart:clear');
             this.toggle(false);
@@ -60,9 +59,5 @@ export class SuccessComponent extends Component<null> {
         } else {
             this.container.classList.remove('modal_active');
         }
-    }
-
-    close() {
-        this.toggleVisibility();
     }
 }

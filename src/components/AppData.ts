@@ -41,15 +41,9 @@ export class AppData extends Model<AppDataStructure> {
         this.emitEvents('order:updated', this.data);
     }
 
-    clearOrder() {
-        this.data.order = null;
-        this.emitEvents('order:updated', this.data);
-    }
-
     placeOrder() {
         if (this.data.order) {
             return this.api.postOrder(this.data.order).then((result: IOrderResult) => {
-                this.clearOrder();
                 this.clearCart();
                 this.emitEvents('order:placed', { result, ...this.data });
                 return result;
@@ -66,9 +60,9 @@ export class AppData extends Model<AppDataStructure> {
         this.events.on(event, callback as (data: unknown) => void);
     }
 
-    getProducts(): IProduct[] {
-        return this.data.products;
-    }
+    // getProducts(): IProduct[] {
+    //     return this.data.products;
+    // }
 
     getCart(): IProduct[] {
         return this.data.cart;

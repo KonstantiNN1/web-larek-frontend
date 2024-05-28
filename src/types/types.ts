@@ -8,7 +8,6 @@ export interface IProduct {
     isFull?: boolean;
 }
 
-// Order interfaces
 export interface IOrder {
     id: number;
     products: IProduct[];
@@ -23,20 +22,17 @@ export interface IOrderResult {
     totalAmount: number;
 }
 
-// API interfaces
 export interface IWebLarekApi {
     getAllProducts(): Promise<IProduct[]>;
     getProduct(id: string): Promise<IProduct>;
     postOrder(order: IOrder): Promise<IOrderResult>;
 }
 
-// Api response type
 export type ApiListResponse<Type> = {
     total: number;
     items: Type[];
 };
 
-// Api post methods type
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 export interface IContactFormComponent {
@@ -56,4 +52,17 @@ export interface AppDataEvents {
     'cart:updated': AppDataStructure;
     'order:updated': AppDataStructure;
     'order:placed': { result: IOrderResult } & AppDataStructure;
+}
+
+export interface IPage {
+    gallery: HTMLElement[];
+    cart: HTMLElement[];
+    counter: number;
+}
+
+export interface ISuccess {
+    closeButton: HTMLButtonElement;
+    image: string;
+    description: string;
+    totalSumm: number;
 }

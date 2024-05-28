@@ -2,8 +2,9 @@ import { Component } from './base/Component';
 import { IProduct } from '../types/types';
 import { ProductComponent } from './ProductComponent';
 import { EventEmitter } from './base/events';
+import { IPage } from '../types/types';
 
-export class Page extends Component<null> {
+export class Page extends Component<IPage> {
     private products: IProduct[];
     private eventEmitter: EventEmitter;
 
@@ -19,10 +20,10 @@ export class Page extends Component<null> {
 
     setProducts(products: IProduct[]) {
         this.products = products;
-        this.render(null);
+        this.render();
     }
 
-    render(_: null) {
+    render() {
         super.render(null);
 
         const fragment = document.createDocumentFragment();

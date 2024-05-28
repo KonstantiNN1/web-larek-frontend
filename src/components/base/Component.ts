@@ -8,19 +8,11 @@ export class Component<T> {
 
     render(data: T, ...args: any[]) {
         this.data = data;
-        this.container.innerHTML = ''; // Очистка контейнера перед рендерингом
+        this.container.innerHTML = '';
     }
 
     toggleVisibility() {
         this.container.classList.toggle('hidden');
-    }
-
-    open() {
-        this.container.classList.remove('hidden');
-    }
-
-    close() {
-        this.container.classList.add('hidden');
     }
 
     protected emit(eventName: string, data?: any): void {
