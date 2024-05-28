@@ -47,22 +47,24 @@ _events_ – объект событий, который также переда
 
 _emitEvents(events)_ – метод, который эмитирует события
 
+_on_ – метод, который обрабатывает нажатие
+
 
 ### abstract class Component<T>:
 
 _container_: HTMLElement – какой-либо элемент, который передается в конструкторе
 
-_toggleClass(element: HTMLElement, class: string): void_ – метод, который меняет класс у элемента
+_data_: T | null
 
-_setTextContent(element: HTMLElement, value: string)_ – метод, который устанавливает текст
+_toggleVisibility(): void_ – метод, который меняет класс у элемента
 
-_setActivation(element: HTMLElement, value: boolean)_ – метод, который устанавливает состояние 
+_render()_ – основной метод класса, который описывает его функциональность
 
-_setImage(elemen: HTMLImageElement, src: string, alt: string)_ – метод, который устанавливает фото и альтернативное описание 
+_open()_ – метод для открытия  
 
-_toggleVisibility(element: HTMLElement)_ – метод, который меняет видимость элемента
+_close_ – метод для закрытия 
 
-_getElement(element: HTMLElement)_ – метод, который возвращает элемент
+_emit(eventName: string, data?: any)_ – метод для эмитации
 
 
 ### class api:
@@ -98,172 +100,132 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
 ## Слой отображения (View) 
 
-### class Product extends Component<IProduct>  – класс, который описывает продукт и то, какие действия с ним можно сделать
+### class ProductComponent extends Component<IProduct>  – класс, который описывает продукт и то, какие действия с ним можно сделать
+ 
+    _eventEmitter: EventEmitter_ – добавляется для того, чтобы работали события
 
-
-    title: HTMLElement – название ячейки
-
-    category: HTMLElement – категория ячейки
-
-    image: HTMLImageElement – ссылка на изображение/прорисовка изображения
-
-    price: HTMLElement – цена в формате $number + string
-
-    button: HTMLButtonElement – вшитая в карточку кнопка
+    _render(product: IProduct)_ – основной метод класса
     
-    ?selected: boolean
-
-    ?actions: Actions
-
-    get id(): string
-
-    set id(value: string): void
+    _setElementText(cardElement: DocumentFragment, selector: string, text: string | undefined)_ – метод для создания элемента
    
-    get title(): string
+    _getElement()_ – метод, чтобы получить элемент
 
-    set title(value: string): void
+    _on(eventName: string, listener: (...args: any[]) => void)_ – метод для активации нажатия
 
-    set image(value: string): void
-
-    set selected(value: boolean): void
-
-    set price(calue: numver | null)
-
-    set category(value: CategoryOfProduct)
+    _applyCategoryStyle(element: HTMLElement, category: string)_ – метод для установки цвета категории 
  
 
-### class OpenedProduct extends Product – класс, который описывает продукт, открытый в модальном окне
+### class ProductPopupComponent extends Component<IProduct> – класс, который описывает продукт, открытый в модальном окне
 
+    _eventEmitter: EventEmitter_ – добавляется для того, чтобы работали события
 
-    description: HTMLElement
+    _render(product: IProduct)_ – основной метод класса, который реализовывает функциональность
+    
+    _toggle(show: boolean)_ – метод для открытия/закрытия попапа 
 
-    set description(value: string)
+    _applyCategoryStyle(element: HTMLElement, category: string)_ – метод для установки цвета категории 
 
 
 ### class Page extends Component<IPage> – класс, который описывает стартовую страницу
 
+    products: IProduct[] – все продукты (карточки) на страницк
+    
+    eventEmitter: EventEmitter – обработчик событий
 
-    gallery: HTMLElement;
+    setProducts(products: IProduct[]) - метод для установки карточек
 
-    counter: HTMLElement;
+    on(eventName: string, listener: (...args: any[]) => void) – метод для обработки клика
 
-    cart: HTMLElement;
-
-    layout: HTMLElement;
-
-    set gallery();
-
-    set counter();
+    render() – метод, описывающий основую функциональность класса
 
 
+### class CartComponent extends Component<IProduct[]>  – класс, который описывает корзину (открытую в модальном окне) 
 
-### class Cart extends Component<ICart>  – класс, который описывает корзину (открытую в модальном окне) 
+    eventEmitter: EventEmitter – обработчик событий
+    
+    private basketCounterElement: HTMLElement | null – иконка корзины
+    
+    render(cart: IProduct[]) – метод, описывающий основую функциональность класса
 
+    toggle(show: boolean) – открытие/закрытия модального окна
 
-    list: HTMLElement
-
-    price: HTMLElement
-
-    button: HTMLButtonElement
-
-    ?events: IEvents
-
-    set price(newPrice: number)
-
-    set list(products: HTMLElement[]) 
+    updateBasketCounter(count: number) – метод для обновления количества на иконке корзины
 
 
-### class ProductInCart extends Component<IProductInCart> – класс, который описывает каждый продукт в корзине
+### class OrderComponent extends Component<IOrder> – класс, который описывает модальное окно заказа
+
+    order: IOrder – описание заказа
+    
+    eventEmitter: EventEmitter – обработчик событий
+    
+    contactsContainer: HTMLElement – описание следующего попапа (для перехода к нему)
+    
+    selectedPaymentMethod: 'online' | 'cash' | null = null – описание метода оплаты
+    
+    setOrder(order: IOrder) – метод для заполнения заказа
+
+    handleInputChange(event: Event) – метод для изменений, который вносятся в заказе
+
+    selectPaymentMethod(method: 'online' | 'cash') – метод для выбора способа оплаты
+
+    checkFormValidity() – метод для валидации
+
+    confirmOrder() – метод для перехода к следующему попапу
+
+    render() – метод, описывающий основую функциональность класса
+
+    toggle(show: boolean) – открытие/закрытия модального окна
 
 
-    index: HTMLElement
-
-    title: HTMLElement
-
-    price: HTMLElement
-
-    button: HTMLButtonElement
-
-    ?actions: Actions
-
-    set index(value: number)
-
-    set title(value: string)
-
-    set price(value: number | null)
+### class ContactFormComponent extends Component<IContactFormComponent> – класс, который описывает модальное окно ввода данных о клиенте
 
 
-### class Order extends Component<IDelivery> – класс, который описывает модальное окно заказа
-
-
-    online: HTMLButtonElement
-
-    offline: HTMLButtonElement
-
-    address: HTMLInputElement
-
-    actions: Actions
-
-    toggleIsChosen(button: HTMLButtonElement): void
-
-
-### class User extends Component<IUser> – класс, который описывает модальное окно ввода данных о клиенте
-
-
-    email: HTMLInputElement;
+    eventEmitter: EventEmitter – обработчик событий
    
-    phone: HTMLInputElement;
+    render() – метод, описывающий основую функциональность класса
    
-    actions: Actions
+    toggle(show: boolean) – открытие/закрытия модального окна
+
+    on(event: string, callback: (data: any) => void) - обработка нажатия на кнопук
 
 
-### class Success extends Component<ISuccess> 
+### class SuccessComponent extends Component<ISuccess> - класс, описывающий модальное окно при успешном заказе
 
+    eventEmitter: EventEmitter – обработчик событий
+    
+    render(totalAmount: number) – метод, описывающий основую функциональность класса
 
-
-    close: HTMLButtonElement;
-
-    totalSumm: HTMLElement;
-
-    image: HTMLElement;
-
-    description: HTMLElement;
-
-
+    toggle(show: boolean) – открытие/закрытия модального окна
 
 
 ## Слой данных (Model)
 
 ### class AppData extends Model<IAppData> – класс для взаимодействия представления с данными 
 
+
+    api: IWebLarekApi – передача сервисного класса 
+
+    products: [] – список продуктов
+    
+    cart: [] – все продукты в корзине
+    
+    fetchProducts() – метод для обновления продуктов
  
-    cart: HTMLElement[];
+    addToCart(product: IProduct) – метод для добавления продукта в корзину
     
-    inCart: HTMLElement[];
+    removeFromCart(productId: number)  – метод для удаления продукта из корзины
     
-    order: Record<HTMLElement>;
+    clearCart()  – очистка корзины 
     
-    addToCart(product: HTMLElement): void
+    setOrder(order: IOrder) – установка заказа 
     
-    deleteFromCart(product: HTMLElement): void
+    placeOrder() – оформление заказа  
     
-    clearCart(): void
+    on<K extends keyof AppDataEvents>(event: K, callback: (data: AppDataEvents[K]) => void) – обработка действия
 
-    clearOrder(): void;
+    getCart(): IProduct[] – метод, чтобы передать корзину
 
-    setProducts(): void
-
-    getTotalPrice(): void
-
-    getTotalNumber(): void
-
-    validateDelivery(): boolean;
-
-    validateUser(): boolean;
-
-    resetChosen(): boolean;
-
-    errors: FormErrors;
+    getOrder(): IOrder | null  – метод, чтобы передать заказ
 
 
 
@@ -288,120 +250,125 @@ _trigger<T extends object>(eventName: string, context?: Partial<T>)_ – мет�
 
 **type FormErrors =  [key: string]: string | undefined ** – тип для вызова ошибки во время валидации
 
-**interface IProduct**  – все, что встречается у продукта во время отображения на экране или его выбора
-  id: string;
-
-  title: string;
-
-  category: string;
-  
-  description: string;
-  
-  image: string;
-  
-  price: number | null;
-  
-  selected: boolean;
-
-
-
-**interface IProductInCart extends IProduct**  – то, что есть у продукта в корзине
-   
-    index: number;
-
-
-**interface ICart**  – то, как выглядит сама корзина
+export interface IProduct {
+ 
+    id: number;
     
-    list: Object[];
+    title: string;
     
     price: number;
-
-
-**interface IOrderForm**  – вся форма для заказа
-
-  items: object[]
-
-  payment: 'Онлайн' | 'При получении' | undefined;
-  
-  address: string;
-  
-  email: string;
-  
-  phone: string;
-
-
-
-**interface IDelivery**  – первая часть формы, которые появляется в модальном окне при нажатии кнопки "Оформить"
     
-    address: string;
+    description: string;
     
-    payment: 'Онлайн' | 'При получении';
+    image: string;
+    
+    category?: string;
+    
+    isFull?: boolean;
+
+}
+
+export interface IOrder {
+
+    id: number;
+    
+    products: IProduct[];
+    
+    totalAmount: number;
+    
+    customerName: string;
+    
+    customerAddress: string;
+
+}
+
+export interface IOrderResult {
+
+    success: boolean;
+    
+    orderId: string;
+
+    totalAmount: number;
+
+}
 
 
-**interface IUser**  – вторая часть формы, после деталей заказа
+export interface IWebLarekApi {
    
-    email: string;
-   
-    phone: string;
-
-
-**interface Actions**  – любое действие, которое происходит при клике  
-  
-    onClick: (event: MouseEvent) => void;
-
-
-**interface IAppData**  – то, какие данные и методы необходимы для работы приложения
-
-    cart: Product[];
+    getAllProducts(): Promise<IProduct[]>;
     
-    gallery: Product[];
+    getProduct(id: string): Promise<IProduct>;
     
-    order: IOrder;
+    postOrder(order: IOrder): Promise<IOrderResult>;
+
+}
+
+
+export type ApiListResponse<Type> = {
+
+    total: number;
     
-    addToCart(product: Product): void
+    items: Type[];
+
+};
+
+
+export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+
+export interface IContactFormComponent {
+
+    render(): void;
     
-    deleteFromCart(product: Product): void
+    toggle(show: boolean): void;
     
-    clearCart(): void
+    on(event: string, callback: (data: any) => void): void;
 
-    clearOrder(): void;
+}
 
-    setProducts(): void
+export interface AppDataStructure {
 
-    getTotalPrice(): void
+    products: IProduct[];
+    
+    cart: IProduct[];
+    
+    order: IOrder | null;
 
-    getTotalNumber(): void
+}
 
-    validateOrder(): boolean;
+export interface AppDataEvents {
 
-    validateUser(): boolean;
+    'products:updated': AppDataStructure;
+    
+    'cart:updated': AppDataStructure;
+    
+    'order:updated': AppDataStructure;
+    
+    'order:placed': { result: IOrderResult } & AppDataStructure;
 
-    resetChosen(): boolean;
+}
 
-    errors: FormErrors;
-
-
-
-**interface IPage**  – то, как выглядит приложение при загрузке
+export interface IPage {
 
     gallery: HTMLElement[];
-
+    
     cart: HTMLElement[];
-
+    
     counter: number;
 
+}
 
 
-**interface ISuccess**  – то, как выглядит последнее окно после успешного заказа
-    
+export interface ISuccess {
+
     closeButton: HTMLButtonElement;
-
+    
     image: string;
-
+    
     description: string;
-
-    totalSumm: number;
-
+    
+    totalAmount: number;
+    
+}
 
 
 
