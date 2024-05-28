@@ -397,9 +397,3 @@ export interface ISuccess {
 'cart:updated' – актуализация корзины
 
 'order:updated' – актуализация заказа
-
-'order: ordered' – вызывает последний попап "Заказ оформлен"
-
-'modal: close' – вызывается при нажатии на крестик, escape и overlay во время заказа
-
-'gallery: open'
