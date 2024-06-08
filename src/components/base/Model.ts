@@ -1,4 +1,4 @@
-import { EventEmitter } from './Stneve';
+import { EventEmitter } from './Events';
 
 export abstract class Model<T> {
     protected data: T;

@@ -9,7 +9,7 @@ import { AppData } from './components/AppData';
 import { WebLarekApi } from './components/WebLarekApi';
 import { IProduct, IOrderRequest, IOrderResult } from './types/types';
 import { ProductPopupComponent } from './components/ProductPopupComponent';
-import { EventEmitter } from './components/base/Stneve';
+import { EventEmitter } from './components/base/Events';
 import { Form } from './components/Form';
 
 document.addEventListener('DOMContentLoaded', () => {

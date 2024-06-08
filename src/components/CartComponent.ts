@@ -1,5 +1,5 @@
 import { Component } from './base/Component';
-import { EventEmitter } from './base/Stneve';
+import { EventEmitter } from './base/Events';
 import { IProduct } from '../types/types';
 
 export class CartComponent extends Component<IProduct[]> {

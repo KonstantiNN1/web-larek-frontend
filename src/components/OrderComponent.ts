@@ -1,6 +1,6 @@
 import { Component } from './base/Component';
 import { IOrder, IOrderRequest } from '../types/types';
-import { EventEmitter } from './base/Stneve';
+import { EventEmitter } from './base/Events';
 import { Form } from './Form';
 
 export class OrderComponent extends Component<IOrder> {

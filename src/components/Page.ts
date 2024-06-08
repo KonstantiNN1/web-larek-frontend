@@ -1,7 +1,7 @@
 import { Component } from './base/Component';
 import { IProduct } from '../types/types';
 import { ProductComponent } from './ProductComponent';
-import { EventEmitter } from './base/Stneve';
+import { EventEmitter } from './base/Events';
 import { IPage } from '../types/types';
 
 export class Page extends Component<IPage> {
