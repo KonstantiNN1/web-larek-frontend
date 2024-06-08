@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderModalContainer = document.createElement('div');
     orderModalContainer.className = 'modal hidden';
     document.body.appendChild(orderModalContainer);
-    const orderComponent = new OrderComponent(orderModalContainer, eventEmitter);
 
     const contactsContainer = document.createElement('div');
     contactsContainer.className = 'modal hidden';
@@ -45,9 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(productPopupContainer);
     const productPopupComponent = new ProductPopupComponent(productPopupContainer, eventEmitter);
 
+    const orderComponent = new OrderComponent(orderModalContainer, eventEmitter, form);
+
     // Обработчики событий для обновления UI
     eventEmitter.on('products:updated', (data: { products: IProduct[] }) => {
         page.setProducts(data.products);
+        cartComponent.render([])
 
         page.on('product:clicked', (product: IProduct) => {
             productPopupComponent.render(product);
@@ -105,17 +107,33 @@ document.addEventListener('DOMContentLoaded', () => {
         cartComponent.toggle(true);
     });
 
-    cartModalContainer?.addEventListener('click', (event) => {
-        if (event.target === cartModalContainer) {
-            cartComponent.toggle(false);
+    // Обработка события закрытия модальных окон при клике на overlay
+    document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        if (target.classList.contains('modal')) {
+            toggleAllModals(false);
+        }
+    });
+
+    // Обработка события закрытия модальных окон при нажатии на клавишу Escape
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            toggleAllModals(false);
         }
     });
 
     // Обработка события добавления товара в корзину
     eventEmitter.on('cart:add', (product: IProduct) => {
         appData.addToBasket(product);
-        product.selected = true;
+        product.selected = true; // Обновляем состояние продукта
         productPopupComponent.toggle(false); // Закрытие модального окна ProductPopupComponent
+
+        // Блокировка кнопки "В корзину"
+        const button = document.querySelector(`.card__button[data-id="${product.id}"]`) as HTMLButtonElement;
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'В корзине';
+        }
     });
 
     // Обработка события закрытия корзины
@@ -145,11 +163,32 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBasketCounter(0); // Обновление счетчика корзины
     });
 
+    // Обработка события открытия формы контактов
+    eventEmitter.on('order:contactForm', () => {
+        orderComponent.toggle(false);
+        contactFormComponent.render();
+        contactFormComponent.toggle(true);
+    });
+
     function updateBasketCounter(count: number) {
         const basketCounter = document.querySelector('.header__basket-counter');
         if (basketCounter) {
             basketCounter.textContent = count.toString();
         }
     }
-});
 
+    function toggleAllModals(show: boolean) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (show) {
+                modal.classList.add('modal_active');
+            } else {
+                modal.classList.remove('modal_active');
+            }
+        });
+
+        if (!show) {
+            eventEmitter.emit('cart:clear');
+        }
+    }
+});

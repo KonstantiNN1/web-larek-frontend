@@ -60,5 +60,22 @@ export class SuccessComponent extends Component<null> {
 
     toggle(show: boolean) {
         this.toggleClass(this.container, 'modal_active', show);
+        if (!show) {
+            this.eventEmitter.emit('cart:clear');
+            document.removeEventListener('click', this.handleOverlayClick);
+            document.removeEventListener('keydown', this.handleEscapePress);
+        }
     }
+
+    private handleOverlayClick = (event: MouseEvent) => {
+        if (event.target === this.container) {
+            this.toggle(false);
+        }
+    };
+
+    private handleEscapePress = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            this.toggle(false);
+        }
+    };
 }

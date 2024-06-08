@@ -1,4 +1,4 @@
-import { Api } from './base/api';
+import { Api } from './base/Api';
 import { IWebLarekApi, IProduct, IOrder, IOrderResult, IOrderRequest } from '..//types/types';
 import { API_URL, CDN_URL } from '../utils/constants'
 import { ApiListResponse } from '..//types/types';
@@ -52,4 +52,3 @@ export class WebLarekApi extends Api<IWebLarekApi> {
         });
     }
 }
-

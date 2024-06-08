@@ -1,7 +1,7 @@
 import { Component } from './base/Component';
 import { EventEmitter } from './base/events';
 
-export class ContactFormComponent extends Component<{}> {
+export class ContactFormComponent extends Component<null> {
     private eventEmitter: EventEmitter;
 
     constructor(container: HTMLElement, eventEmitter: EventEmitter) {
@@ -9,63 +9,57 @@ export class ContactFormComponent extends Component<{}> {
         this.eventEmitter = eventEmitter;
     }
 
-    render(): HTMLElement {
-        this.container.innerHTML = ''; // Очищаем содержимое контейнера перед рендерингом нового модального окна
-        super.render({});
+    handleInputChange(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const form = target.closest('form') as HTMLFormElement;
+        const emailInput = form.querySelector('input[name="email"]') as HTMLInputElement;
+        const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement;
+        const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 
-        const modalContainer = document.createElement('div');
-        modalContainer.className = 'modal__container';
-modalContainer.style.width = '1320px';
-modalContainer.style.height = '645px';
+        const isFormValid = emailInput.value.trim() !== '' && phoneInput.value.trim() !== '';
+        submitButton.disabled = !isFormValid;
+    }
+
+    handleSubmit(event: Event) {
+        event.preventDefault();
+        const form = event.target as HTMLFormElement;
+        const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
+        const phone = (form.querySelector('input[name="phone"]') as HTMLInputElement).value;
+
+        this.eventEmitter.emit('contactForm:submitted', { email, phone });
+    }
+
+    render(): HTMLElement {
+        super.render();
+
+        const template = document.getElementById('contacts') as HTMLTemplateElement;
+        if (!template) {
+            throw new Error('Template with id "contacts" not found.');
+        }
+
+        const contactFormElement = document.importNode(template.content, true);
+
+        const form = contactFormElement.querySelector('form') as HTMLFormElement;
+        form.addEventListener('submit', this.handleSubmit.bind(this));
+
+        const emailInput = form.querySelector('input[name="email"]') as HTMLInputElement;
+        const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement;
+        emailInput.addEventListener('input', this.handleInputChange.bind(this));
+        phoneInput.addEventListener('input', this.handleInputChange.bind(this));
 
         const closeButton = document.createElement('button');
         closeButton.className = 'modal__close';
         closeButton.setAttribute('aria-label', 'закрыть');
         closeButton.addEventListener('click', () => this.toggle(false));
 
-        const modalContent = document.createElement('div');
-        modalContent.className = 'modal__content';
-
-        const emailLabel = document.createElement('label');
-        emailLabel.className = 'form__label';
-        emailLabel.textContent = 'Email';
-        const emailInput = document.createElement('input');
-        emailInput.className = 'form__input';
-        emailInput.type = 'email';
-        emailInput.name = 'email';
-        emailInput.placeholder = 'Введите Email';
-        emailLabel.appendChild(emailInput);
-
-        const phoneLabel = document.createElement('label');
-        phoneLabel.className = 'form__label';
-        phoneLabel.textContent = 'Телефон';
-        const phoneInput = document.createElement('input');
-        phoneInput.className = 'form__input';
-        phoneInput.type = 'tel';
-        phoneInput.name = 'phone';
-        phoneInput.placeholder = '+7 (999) 999-99-99';
-        phoneLabel.appendChild(phoneInput);
-
-        modalContent.appendChild(emailLabel);
-        modalContent.appendChild(phoneLabel);
-
-        const confirmButton = document.createElement('button');
-        confirmButton.className = 'button button_confirm';
-        confirmButton.textContent = 'Оплатить';
-        modalContent.appendChild(confirmButton);
-
+        const modalContainer = document.createElement('div');
+        modalContainer.className = 'modal__container';
         modalContainer.appendChild(closeButton);
-        modalContainer.appendChild(modalContent);
+        modalContainer.appendChild(contactFormElement);
+
+        this.container.innerHTML = '';
         this.container.appendChild(modalContainer);
         this.toggle(true);
-
-        confirmButton.addEventListener('click', () => {
-            const email = emailInput.value;
-            const phone = phoneInput.value;
-
-            console.log('Contact form submitted with email:', email, 'and phone:', phone);
-            this.eventEmitter.emit('contactForm:submitted', { email, phone });
-        });
 
         return this.container;
     }

@@ -1,6 +1,5 @@
 import { IProduct, IOrder, IOrderRequest, IOrderResult, FormErrors, IAppState } from '../types/types';
 import { EventEmitter } from './base/events';
-import { Model } from './base/Model';
 import { WebLarekApi } from './WebLarekApi';
 
 export class AppData implements IAppState {
@@ -23,8 +22,11 @@ export class AppData implements IAppState {
     }
 
     addToBasket(value: IProduct): void {
-        this.basket.push(value);
-        this.eventEmitter.emit('cart:updated', { cart: this.basket });
+        if (!this.basket.find(product => product.id === value.id)) {
+            this.basket.push(value);
+            value.selected = true;
+            this.eventEmitter.emit('cart:updated', { cart: this.basket });
+        }
     }
 
     deleteFromBasket(id: number): void {

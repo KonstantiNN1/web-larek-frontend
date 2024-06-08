@@ -18,17 +18,21 @@ export class Form {
         (this.order as any)[field] = value;
     }
 
-    getField(field: keyof IOrderRequest): string | number | string[] {
+    getField(field: keyof IOrderRequest): string | number | string[] | undefined {
         return this.order[field];
     }
 
     validate(): boolean {
-        const { payment, email, phone, address, total, items } = this.order;
-        console.log('Validating form with data:', this.order);
-        return !!payment && !!email && !!phone && !!address && total > 0 && items && items.length > 0;
+        const { email, phone, address, payment, total, items } = this.order;
+        if (!email || !phone || !address || !payment || !total || !items || items.length === 0) {
+            console.log('Validation failed:', { email, phone, address, payment, total, items });
+            return false;
+        }
+        return true;
     }
 
     getOrderData(): IOrderRequest {
         return this.order;
     }
 }
+

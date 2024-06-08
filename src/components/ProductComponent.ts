@@ -23,7 +23,7 @@ export class ProductComponent extends Component<IProduct> {
             this.render(product);
         });
     }
-
+    
     render(product: IProduct): HTMLElement {
         super.render(product);
 
@@ -33,11 +33,6 @@ export class ProductComponent extends Component<IProduct> {
         }
 
         const cardElement = document.importNode(cardTemplate.content, true);
-
-        // cardElement.querySelector('.card')?.addEventListener('click', () => {
-        //     console.log('Product clicked:', product);
-        //     this.eventEmitter.emit('product:clicked', product);
-        // });
 
         this.setText(cardElement.querySelector('.card__category') as HTMLElement, product.category);
         this.setText(cardElement.querySelector('.card__title') as HTMLElement, product.title);
