@@ -1,6 +1,6 @@
 import { IProduct } from '../types/types';
 import { Component } from './base/Component';
-import { EventEmitter } from './base/events';
+import { EventEmitter } from './base/Stneve';
 import { categoryClasses } from '../utils/utils';
 
 export class ProductPopupComponent extends Component<IProduct> {
@@ -48,13 +48,15 @@ export class ProductPopupComponent extends Component<IProduct> {
             imageElement.alt = product.title;
         }
 
-        const buttonElement = cardElement.querySelector('.button.card__button') as HTMLElement;
+        const buttonElement = cardElement.querySelector('.button.card__button') as HTMLButtonElement;
         if (buttonElement) {
             buttonElement.addEventListener('click', () => {
                 this.eventEmitter.emit('cart:add', product);
+                buttonElement.disabled = true;
                 this.toggle(false);
             });
         }
+
 
         const closeButton = document.createElement('button');
         closeButton.className = 'modal__close';

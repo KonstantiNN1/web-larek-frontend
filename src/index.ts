@@ -9,7 +9,7 @@ import { AppData } from './components/AppData';
 import { WebLarekApi } from './components/WebLarekApi';
 import { IProduct, IOrderRequest, IOrderResult } from './types/types';
 import { ProductPopupComponent } from './components/ProductPopupComponent';
-import { EventEmitter } from './components/base/events';
+import { EventEmitter } from './components/base/Stneve';
 import { Form } from './components/Form';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactsContainer = document.createElement('div');
     contactsContainer.className = 'modal hidden';
     document.body.appendChild(contactsContainer);
-    const contactFormComponent = new ContactFormComponent(contactsContainer, eventEmitter);
+    const contactFormComponent = new ContactFormComponent(contactsContainer, eventEmitter, form);
 
     const successModalContainer = document.createElement('div');
     successModalContainer.className = 'modal hidden';
@@ -127,13 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         appData.addToBasket(product);
         product.selected = true; // Обновляем состояние продукта
         productPopupComponent.toggle(false); // Закрытие модального окна ProductPopupComponent
-
-        // Блокировка кнопки "В корзину"
-        const button = document.querySelector(`.card__button[data-id="${product.id}"]`) as HTMLButtonElement;
-        if (button) {
-            button.disabled = true;
-            button.textContent = 'В корзине';
-        }
     });
 
     // Обработка события закрытия корзины

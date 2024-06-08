@@ -53,25 +53,6 @@ export interface IWebLarekApi {
 
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
-export interface IContactFormComponent {
-    render(): void;
-    toggle(show: boolean): void;
-    on(event: string, callback: (data: any) => void): void;
-}
-
-export interface AppDataStructure {
-    products: IProduct[];
-    cart: IProduct[];
-    order: IOrder | null;
-}
-
-export interface AppDataEvents {
-    'products:updated': AppDataStructure;
-    'cart:updated': AppDataStructure;
-    'order:updated': AppDataStructure;
-    'order:placed': { result: IOrderResult } & AppDataStructure;
-}
-
 export interface IPage {
     gallery: HTMLElement[];
     cart: HTMLElement[];

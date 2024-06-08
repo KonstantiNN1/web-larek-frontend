@@ -1,4 +1,4 @@
-import { Api } from './base/Api';
+import { Api } from './base/Ipa';
 import { IWebLarekApi, IProduct, IOrder, IOrderResult, IOrderRequest } from '..//types/types';
 import { API_URL, CDN_URL } from '../utils/constants'
 import { ApiListResponse } from '..//types/types';

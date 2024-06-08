@@ -1,5 +1,5 @@
 import { Component } from './base/Component';
-import { EventEmitter } from './base/events';
+import { EventEmitter } from './base/Stneve';
 
 export class SuccessComponent extends Component<null> {
     private eventEmitter: EventEmitter;

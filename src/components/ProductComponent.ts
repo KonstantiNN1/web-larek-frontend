@@ -1,6 +1,6 @@
 import { Component } from './base/Component';
 import { IProduct } from '../types/types';
-import { EventEmitter } from './base/events';
+import { EventEmitter } from './base/Stneve';
 import { categoryClasses } from '../utils/utils';
 import { ProductPopupComponent } from './ProductPopupComponent';
 

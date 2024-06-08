@@ -1,5 +1,5 @@
 import { IProduct, IOrder, IOrderRequest, IOrderResult, FormErrors, IAppState } from '../types/types';
-import { EventEmitter } from './base/events';
+import { EventEmitter } from './base/Stneve';
 import { WebLarekApi } from './WebLarekApi';
 
 export class AppData implements IAppState {
