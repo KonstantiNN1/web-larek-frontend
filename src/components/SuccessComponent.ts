@@ -9,8 +9,8 @@ export class SuccessComponent extends Component<null> {
         this.eventEmitter = eventEmitter;
     }
 
-    render(totalAmount: number) {
-        super.render(null); // Очистка контейнера
+    render(totalAmount: number): HTMLElement {
+        super.render();
 
         const successTemplate = document.getElementById('success') as HTMLTemplateElement;
         if (!successTemplate) {
@@ -34,13 +34,15 @@ export class SuccessComponent extends Component<null> {
 
         const modalContainer = document.createElement('div');
         modalContainer.className = 'modal__container';
+        modalContainer.style.width = '1320px';
+        modalContainer.style.height = '645px';
 
         const modalCloseButton = document.createElement('button');
         modalCloseButton.className = 'modal__close';
         modalCloseButton.setAttribute('aria-label', 'закрыть');
-        modalCloseButton.style.position = 'absolute'; 
-        modalCloseButton.style.top = '10px'; 
-        modalCloseButton.style.right = '10px'; 
+        modalCloseButton.style.position = 'absolute';
+        modalCloseButton.style.top = '10px';
+        modalCloseButton.style.right = '10px';
         modalCloseButton.addEventListener('click', () => {
             this.eventEmitter.emit('cart:clear');
             this.toggle(false);
@@ -49,15 +51,14 @@ export class SuccessComponent extends Component<null> {
         modalContainer.appendChild(modalCloseButton);
         modalContainer.appendChild(successElement);
 
+        this.container.innerHTML = '';
         this.container.appendChild(modalContainer);
         this.toggle(true);
+
+        return this.container;
     }
 
     toggle(show: boolean) {
-        if (show) {
-            this.container.classList.add('modal_active');
-        } else {
-            this.container.classList.remove('modal_active');
-        }
+        this.toggleClass(this.container, 'modal_active', show);
     }
 }

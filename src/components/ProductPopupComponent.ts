@@ -1,6 +1,7 @@
 import { IProduct } from '../types/types';
 import { Component } from './base/Component';
 import { EventEmitter } from './base/events';
+import { categoryClasses } from '../utils/utils';
 
 export class ProductPopupComponent extends Component<IProduct> {
     private eventEmitter: EventEmitter;
@@ -10,8 +11,8 @@ export class ProductPopupComponent extends Component<IProduct> {
         this.eventEmitter = eventEmitter;
     }
 
-    render(product: IProduct) {
-        super.render(product);
+    render(product: IProduct): HTMLElement {
+        super.render();
 
         const cardTemplate = document.getElementById('card-preview') as HTMLTemplateElement;
         if (!cardTemplate) {
@@ -23,7 +24,7 @@ export class ProductPopupComponent extends Component<IProduct> {
         const categoryElement = cardElement.querySelector('.card__category') as HTMLElement;
         if (categoryElement && product.category) {
             categoryElement.textContent = product.category;
-            this.applyCategoryStyle(categoryElement, product.category);
+            this.applyCategoryClass(categoryElement, product.category);
         }
 
         const titleElement = cardElement.querySelector('.card__title') as HTMLElement;
@@ -70,32 +71,17 @@ export class ProductPopupComponent extends Component<IProduct> {
         modalContainer.appendChild(closeButton);
         modalContainer.appendChild(cardElement);
 
+        this.container.innerHTML = '';
         this.container.appendChild(modalContainer);
-        this.toggle(true);
+
+        return this.container;
     }
 
-    applyCategoryStyle(element: HTMLElement, category: string) {
-        let color = '';
-        switch (category) {
-            case 'софт-скил':
-                color = '#83FA9D';
-                break;
-            case 'другое':
-                color = '#FAD883';
-                break;
-            case 'дополнительное':
-                color = '#B783FA';
-                break;
-            case 'хард-скил':
-                color = '#FAA083';
-                break;
-            case 'кнопка':
-                color = '#83DDFA';
-                break;
-            default:
-                color = '#FFFFFF';
+    applyCategoryClass(element: HTMLElement, category: string) {
+        const categoryClass = categoryClasses[category];
+        if (categoryClass) {
+            element.classList.add(categoryClass);
         }
-        element.style.backgroundColor = color;
     }
 
     toggle(show: boolean) {

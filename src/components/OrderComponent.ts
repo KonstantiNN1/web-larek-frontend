@@ -1,73 +1,17 @@
 import { Component } from './base/Component';
-import { IOrder } from '../types/types';
 import { EventEmitter } from './base/events';
 
-export class OrderComponent extends Component<IOrder> {
-    private order: IOrder;
+export class OrderComponent extends Component<{}> {
     private eventEmitter: EventEmitter;
-    private contactsContainer: HTMLElement;
-    private selectedPaymentMethod: 'online' | 'cash' | null = null;
 
-    constructor(container: HTMLElement, eventEmitter: EventEmitter, contactsContainer: HTMLElement) {
+    constructor(container: HTMLElement, eventEmitter: EventEmitter) {
         super(container);
         this.eventEmitter = eventEmitter;
-        this.contactsContainer = contactsContainer;
-        this.order = {
-            id: 0,
-            products: [],
-            totalAmount: 0,
-            customerName: '',
-            customerAddress: ''
-        };
     }
 
-    setOrder(order: IOrder) {
-        this.order = order;
-        this.render();
-    }
-
-    handleInputChange(event: Event) {
-        const target = event.target as HTMLInputElement;
-        const { name, value } = target;
-
-        if (name === 'customerName') {
-            this.order.customerName = value;
-        } else if (name === 'customerAddress') {
-            this.order.customerAddress = value;
-        }
-    }
-
-    selectPaymentMethod(method: 'online' | 'cash') {
-        this.selectedPaymentMethod = method;
-
-        const onlineButton = this.container.querySelector('.button_online') as HTMLButtonElement;
-        const cashButton = this.container.querySelector('.button_cash') as HTMLButtonElement;
-
-        if (method === 'online') {
-            onlineButton.classList.add('button_alt-active');
-            cashButton.classList.remove('button_alt-active');
-        } else {
-            onlineButton.classList.remove('button_alt-active');
-            cashButton.classList.add('button_alt-active');
-        }
-
-        this.checkFormValidity();
-    }
-
-    checkFormValidity() {
-        const confirmButton = this.container.querySelector('.button_confirm') as HTMLButtonElement;
-        const addressInput = this.container.querySelector('input[name="customerAddress"]') as HTMLInputElement;
-
-        confirmButton.disabled = !(addressInput.value.trim() && this.selectedPaymentMethod);
-    }
-
-    confirmOrder() {
-        this.eventEmitter.emit('order:contactForm', this.order);
-        this.toggle(false);
-    }
-
-    render() {
-        super.render(this.order);
+    render(): HTMLElement {
+        this.container.innerHTML = ''; // Очищаем содержимое контейнера перед рендерингом нового модального окна
+        super.render({});
 
         const modalContainer = document.createElement('div');
         modalContainer.className = 'modal__container';
@@ -94,14 +38,12 @@ export class OrderComponent extends Component<IOrder> {
         onlineButton.type = 'button';
         onlineButton.className = 'button button_alt button_online';
         onlineButton.textContent = 'Онлайн';
-        onlineButton.addEventListener('click', () => this.selectPaymentMethod('online'));
         paymentButtons.appendChild(onlineButton);
 
         const cashButton = document.createElement('button');
         cashButton.type = 'button';
         cashButton.className = 'button button_alt button_cash';
         cashButton.textContent = 'При получении';
-        cashButton.addEventListener('click', () => this.selectPaymentMethod('cash'));
         paymentButtons.appendChild(cashButton);
 
         modalContent.appendChild(paymentButtons);
@@ -117,11 +59,8 @@ export class OrderComponent extends Component<IOrder> {
         const addressInput = document.createElement('input');
         addressInput.className = 'form__input';
         addressInput.type = 'text';
-        addressInput.name = 'customerAddress';
+        addressInput.name = 'address';
         addressInput.placeholder = 'Введите адрес';
-        addressInput.value = this.order.customerAddress;
-        addressInput.addEventListener('input', this.handleInputChange.bind(this));
-        addressInput.addEventListener('input', this.checkFormValidity.bind(this));
         addressLabel.appendChild(addressInput);
 
         modalContent.appendChild(addressLabel);
@@ -129,15 +68,32 @@ export class OrderComponent extends Component<IOrder> {
         const confirmButton = document.createElement('button');
         confirmButton.className = 'button button_confirm';
         confirmButton.textContent = 'Далее';
-        confirmButton.addEventListener('click', this.confirmOrder.bind(this));
-        confirmButton.disabled = true;
-
         modalContent.appendChild(confirmButton);
 
         modalContainer.appendChild(closeButton);
         modalContainer.appendChild(modalContent);
         this.container.appendChild(modalContainer);
         this.toggle(true);
+
+        confirmButton.addEventListener('click', () => {
+            const paymentMethod = onlineButton.classList.contains('button_alt-active') ? 'online' : 'cash';
+            const address = addressInput.value;
+
+            this.eventEmitter.emit('order:confirmed', { paymentMethod, address });
+            this.toggle(false);
+        });
+
+        onlineButton.addEventListener('click', () => {
+            onlineButton.classList.add('button_alt-active');
+            cashButton.classList.remove('button_alt-active');
+        });
+
+        cashButton.addEventListener('click', () => {
+            onlineButton.classList.remove('button_alt-active');
+            cashButton.classList.add('button_alt-active');
+        });
+
+        return this.container;
     }
 
     toggle(show: boolean) {

@@ -11,7 +11,7 @@ export class Page extends Component<IPage> {
     constructor(containerId: string, eventEmitter: EventEmitter) {
         const container = document.getElementById(containerId);
         if (!container) {
-            throw new Error(`Элемент с id ${containerId} не найден.`);
+            throw new Error(`Элемент с id ${containerId} не найден`);
         }
         super(container);
         this.products = [];
@@ -23,24 +23,26 @@ export class Page extends Component<IPage> {
         this.render();
     }
 
-    render() {
-        super.render(null);
+    render(): HTMLElement {
+        super.render();
 
         const fragment = document.createDocumentFragment();
 
-        this.products.forEach(product => {
-            const productComponent = new ProductComponent(document.createElement('div'));
-            productComponent.render(product);
-            productComponent.on('product:clicked', (product: IProduct) => {
-                this.eventEmitter.emit('product:clicked', product);
-            });
-            fragment.appendChild(productComponent.getElement());
+        const productComponent = new ProductComponent(this.container, this.products);
+        productComponent.renderProducts(this.products);
+
+        productComponent.on('product:clicked', (product: IProduct) => {
+            this.eventEmitter.emit('product:clicked', product);
         });
 
-        this.container.appendChild(fragment);
+        return this.container;
     }
 
     on(eventName: string, listener: (...args: any[]) => void) {
         this.eventEmitter.on(eventName, listener);
+    }
+
+    getProductsContainer(): HTMLElement {
+        return document.getElementById('gallery');
     }
 }

@@ -1,24 +1,83 @@
-export class Component<T> {
-    protected container: HTMLElement;
-    protected data: T | null = null;
+// export class Component<T> {
+//     protected container: HTMLElement;
+//     protected data: T | null = null;
 
-    constructor(container: HTMLElement) {
-        this.container = container;
+//     constructor(container: HTMLElement) {
+//         this.container = container;
+//     }
+
+//     render(data: T, ...args: any[]) {
+//         this.data = data;
+//         this.container.innerHTML = '';
+//     }
+
+//     toggleVisibility() {
+//         this.container.classList.toggle('hidden');
+//     }
+
+//     protected emit(eventName: string, data?: any): void {
+//         const event = new CustomEvent(eventName, {
+//             detail: data
+//         });
+//         this.container.dispatchEvent(event);
+//     }
+// }
+
+import {IEvents} from "./events";
+
+/**
+ * Базовый компонент
+ */
+export abstract class Component<T> {
+    protected constructor(protected readonly container: HTMLElement) {
+        // Учитывайте что код в конструкторе исполняется ДО всех объявлений в дочернем классе
     }
 
-    render(data: T, ...args: any[]) {
-        this.data = data;
-        this.container.innerHTML = '';
+    // Инструментарий для работы с DOM в дочерних компонентах
+
+    // Переключить класс
+    toggleClass(element: HTMLElement, className: string, force?: boolean) {
+        element.classList.toggle(className, force);
     }
 
-    toggleVisibility() {
-        this.container.classList.toggle('hidden');
+    // Установить текстовое содержимое
+    protected setText(element: HTMLElement, value: unknown) {
+        if (element) {
+            element.textContent = String(value);
+        }
     }
 
-    protected emit(eventName: string, data?: any): void {
-        const event = new CustomEvent(eventName, {
-            detail: data
-        });
-        this.container.dispatchEvent(event);
+    // Сменить статус блокировки
+    setDisabled(element: HTMLElement, state: boolean) {
+        if (element) {
+            if (state) element.setAttribute('disabled', 'disabled');
+            else element.removeAttribute('disabled');
+        }
+    }
+
+    // Скрыть
+    protected setHidden(element: HTMLElement) {
+        element.style.display = 'none';
+    }
+
+    // Показать
+    protected setVisible(element: HTMLElement) {
+        element.style.removeProperty('display');
+    }
+
+    // Установить изображение с алтернативным текстом
+    protected setImage(element: HTMLImageElement, src: string, alt?: string) {
+        if (element) {
+            element.src = src;
+            if (alt) {
+                element.alt = alt;
+            }
+        }
+    }
+
+    // Вернуть корневой DOM-элемент
+    render(data?: Partial<T>): HTMLElement {
+        Object.assign(this as object, data ?? {});
+        return this.container;
     }
 }
