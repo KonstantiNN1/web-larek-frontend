@@ -70,32 +70,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     eventEmitter.on('contactForm:submitted', (data: { email: string; phone: string }) => {
-        console.log('Event contactForm:submitted received with data:', data);
+        console.log('Форма загружена и содержит:', data);
         form.setField('email', data.email);
         form.setField('phone', data.phone);
 
         if (form.validate()) {
             const orderData = form.getOrderData() as IOrderRequest;
-            console.log('Order data to be sent:', orderData);
+            console.log('Данные для отправки:', orderData);
             // Отправка данных на сервер
             api.postOrder(orderData).then((result: IOrderResult) => {
-                console.log('Response from server:', result);
                 if (result.id && result.total) {
-                    console.log('Order placed successfully');
+                    console.log('Успешно');
                     successComponent.render(result.total);
-                    console.log('Rendering success component');
                     successComponent.toggle(true);
                     cartComponent.toggle(false);
                     contactFormComponent.toggle(false);
                     productPopupComponent.toggle(false);
                 } else {
-                    console.log('Order submission failed:', result);
+                    console.log('Ошибка:', result);
                 }
             }).catch((error) => {
-                console.error('Error submitting order:', error);
+                console.error('Ошибка загрузки:', error);
             });
         } else {
-            console.log('Form validation failed');
+            console.log('Ошибка валидации');
         }
     });
 
@@ -142,18 +140,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обработка события оформления заказа
     eventEmitter.on('order:checkout', () => {
         const total = appData.getTotalBasketPrice();
-        const items = appData.basket.map(product => product.id.toString()); // Преобразование элементов в строки
+        const items = appData.basket.map(product => product.id.toString());
         form.setField('total', total);
         form.setField('items', items);
         orderComponent.render();
         orderComponent.toggle(true);
-        cartComponent.toggle(false); // Закрытие корзины после оформления заказа
+        cartComponent.toggle(false);
     });
 
     // Обработка события очистки корзины
     eventEmitter.on('cart:clear', () => {
         appData.clearBasket();
-        updateBasketCounter(0); // Обновление счетчика корзины
+        updateBasketCounter(0);
     });
 
     // Обработка события открытия формы контактов

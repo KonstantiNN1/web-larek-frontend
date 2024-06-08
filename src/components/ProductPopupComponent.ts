@@ -57,7 +57,6 @@ export class ProductPopupComponent extends Component<IProduct> {
             });
         }
 
-
         const closeButton = document.createElement('button');
         closeButton.className = 'modal__close';
         closeButton.setAttribute('aria-label', 'закрыть');

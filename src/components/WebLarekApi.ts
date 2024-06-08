@@ -1,4 +1,4 @@
-import { Api } from './base/Ipa';
+import { Api } from './base/Api';
 import { IWebLarekApi, IProduct, IOrder, IOrderResult, IOrderRequest } from '..//types/types';
 import { API_URL, CDN_URL } from '../utils/constants'
 import { ApiListResponse } from '..//types/types';
@@ -11,7 +11,6 @@ export class WebLarekApi extends Api<IWebLarekApi> {
         this.cdn = CDN_URL;
     }
 
-    
     private addimage(product: IProduct): IProduct {
         product.image = `${this.cdn}/${product.image}`;
         return product;

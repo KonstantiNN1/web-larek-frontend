@@ -25,7 +25,7 @@ export class Form {
     validate(): boolean {
         const { email, phone, address, payment, total, items } = this.order;
         if (!email || !phone || !address || !payment || !total || !items || items.length === 0) {
-            console.log('Validation failed:', { email, phone, address, payment, total, items });
+            console.log('Ошибка валидации:', { email, phone, address, payment, total, items });
             return false;
         }
         return true;
@@ -35,4 +35,3 @@ export class Form {
         return this.order;
     }
 }
-
