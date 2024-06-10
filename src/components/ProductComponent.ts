@@ -35,7 +35,9 @@ export class ProductComponent extends Component<IProduct> {
 
         this.setText(cardElement.querySelector('.card__category') as HTMLElement, product.category);
         this.setText(cardElement.querySelector('.card__title') as HTMLElement, product.title);
-        this.setText(cardElement.querySelector('.card__price') as HTMLElement, product.price === null ? 'Бесценно' : `${product.price} синапсов`);
+        // this.setText(cardElement.querySelector('.card__price') as HTMLElement, product.price === null ? 'Бесценно' : `${product.price} синапсов`);
+        const priceText = product.price === null ? 'Бесценно' : `${product.price} синапсов`;
+        this.setText(cardElement.querySelector('.card__price') as HTMLElement, priceText);
 
         const imageElement = cardElement.querySelector('.card__image') as HTMLImageElement;
         this.setImage(imageElement, product.image, product.title);

@@ -22,6 +22,10 @@ export class AppData implements IAppState {
     }
 
     addToBasket(value: IProduct): void {
+        if (value.price === null) {
+            console.log('Нельзя добавить товар без цены в корзину');
+            return;
+        }
         if (!this.basket.find(product => product.id === value.id)) {
             this.basket.push(value);
             value.selected = true;
